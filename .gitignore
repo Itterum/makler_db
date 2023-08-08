@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.json
+
+env/
+env
+venv/
+venv
+
+output_data/
+output_data
