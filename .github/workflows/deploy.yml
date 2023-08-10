@@ -21,5 +21,5 @@ jobs:
         env:
           BOT_TOKEN:"${{ secrets.BOT_TOKEN }}"
         script: |
-          cd /root/makler_db && export BOT_TOKEN=${BOT_TOKEN} && git pull origin main && docker-compose down && docker-compose up -e BOT_TOKEN=${BOT_TOKEN} --build -d
+          cd /root/makler_db && export BOT_TOKEN=${BOT_TOKEN} && git pull origin main && docker-compose down && docker-compose up --build -d
         
