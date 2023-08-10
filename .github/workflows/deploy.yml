@@ -16,3 +16,9 @@ jobs:
     - name: Deploy
       run: |
         ssh root@80.249.146.241 "cd /root/makler_db && git pull origin main && ./start_app.sh"  # Ваш скрипт деплоя
+
+    - name: SSH to Remote Host
+      uses: appleboy/ssh-action@master
+      with:
+        # Добавьте следующую строку
+        known_hosts: ''
