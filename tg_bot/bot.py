@@ -7,7 +7,7 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from pymongo import MongoClient
 
 # Установите токен вашего бота
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_TOKEN = os.environ.get("TOKEN")
 
 logging.basicConfig(level=logging.INFO)
 
