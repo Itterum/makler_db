@@ -21,7 +21,7 @@ last_collection_time = None
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    await message.reply("Привет! Я бот для парсинга объявлений о продаже автомобилей.")
+    await message.reply("Привет! Я бот для парсинга объявлений.")
 
 
 @dp.message_handler(commands=['parse'])
@@ -38,16 +38,20 @@ async def parse_cars(message: types.Message):
 
         # Получение данных из коллекции
         scraped_data = list(cars_collection.find())
+        scraped_data_list = []
 
-        if scraped_data:
+        for el in scraped_data:
+            scraped_data_list.append(json.loads(str(el).replace('ObjectId(', '').replace(')', '').replace('\'', '\"')))
+
+        if len(scraped_data_list) != 0:
             # Создание временного JSON файла
             json_filename = 'scraped_data.json'
             with open(json_filename, 'w', encoding='utf-8') as json_file:
-                json.dump(scraped_data, json_file,
+                json.dump(scraped_data_list, json_file,
                           ensure_ascii=False, indent=4)
 
             # Отправка ссылки на скачивание файла
-            await bot.send_document(message.chat.id, types.InputFile(json_filename), caption='JSON файл с данными')
+            await bot.send_document(message.chat.id, types.InputFile(json_filename), caption='JSON файл с данными за последний сбор')
         else:
             await message.reply('База данных пуста.')
     except Exception as e:
@@ -81,16 +85,16 @@ async def compare_collections(message: types.Message):
         for doc1, doc2 in zip(docs1, docs2):
             if doc1['price_num'] != doc2['price_num']:
                 differences.append(
-                    f"{doc1['title']}: {doc1['price_text']} -> {doc2['price_text']}")
+                    f"{doc1['title']}: {doc1['price_text']} -> {doc2['price_text']}\nСсылка: {doc1['url']}")
 
         if differences:
-            my_message = f'Различия в ценах: {collection1} {collection2}\n'
+            my_message = f'Различия в ценах:\n'
             for diff in differences:
                 my_message += diff + '\n'
             logging.info(my_message)
             await message.reply(my_message)
         else:
-            await message.reply(f'Нет различий в ценах. {collection1} {collection2}')
+            await message.reply(f'Нет различий в ценах.')
 
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
