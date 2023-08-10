@@ -104,7 +104,7 @@ async def compare_collections(message: types.Message):
             for diff in differences:
                 my_message += diff + '\n'
                 logging.info(my_message)
-                await message.reply(my_message)
+                await message.reply(diff)
         else:
             await message.reply(f'Нет различий в ценах.')
 
