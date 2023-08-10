@@ -20,5 +20,9 @@ jobs:
     - name: SSH to Remote Host
       uses: appleboy/ssh-action@master
       with:
+        host: 80.249.146.241
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
         known_hosts: |
           github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
