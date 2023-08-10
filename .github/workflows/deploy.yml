@@ -20,5 +20,5 @@ jobs:
         port: 22
         script: |
           whoami
-          cd /root && git clone git@github.com:Itterum/makler_db.git && cd makler_db && chmod +x start_app.sh && ./start_app.sh
+          cd /root/makler_db && git pull origin main && docker-compose down && docker-compose up --build -d
         
