@@ -10,13 +10,7 @@ jobs:
     runs-on: ubuntu-latest  # Определение операционной системы
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3 # Клонирование репозитория
-
-    - name: Deploy
-      run: |
-        ssh root@80.249.146.241 "cd /root/makler_db && git pull origin main && ./start_app.sh"  # Ваш скрипт деплоя
-
+    - uses: actions/checkout@v3 # Клонирование репозитория
     - name: SSH to Remote Host
       uses: appleboy/ssh-action@master
       with:
@@ -24,5 +18,5 @@ jobs:
         username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        known_hosts: |
-          github.com ssh-rsa AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+        script: cd /root/makler_db && git pull origin main && ./start_app.sh
+        
