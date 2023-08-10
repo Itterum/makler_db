@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest  # Определение операционной системы
 
     steps:
-    - uses: actions/checkout@v3 # Клонирование репозитория
+    - uses: actions/checkout@v1 # Клонирование репозитория
     - name: SSH to Remote Host
       uses: appleboy/ssh-action@master
       with:
