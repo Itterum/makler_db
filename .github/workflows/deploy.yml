@@ -15,5 +15,5 @@ jobs:
 
     - name: Deploy
       run: |
-        ssh user@80.249.146.241 "cd /root/makler_db && git pull origin main && ./start_app.sh"  # Ваш скрипт деплоя
+        ssh root@80.249.146.241 "cd /root/makler_db && git pull origin main && ./start_app.sh"  # Ваш скрипт деплоя
 
