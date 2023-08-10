@@ -17,8 +17,9 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER_NAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
+        port: ${{ secrets.PORT }}
+        env:
+          BOT_TOKEN:${{ secrets.BOT_TOKEN }}
         script: |
-          whoami
           cd /root/makler_db && git pull origin main && docker-compose down && docker-compose up --build -d
         
