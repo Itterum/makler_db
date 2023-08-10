@@ -14,8 +14,8 @@ jobs:
     - name: SSH to Remote Host
       uses: appleboy/ssh-action@master
       with:
-        host: 80.249.146.241
-        username: root
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: cd /root/makler_db && git pull git@github.com:Itterum/makler_db.git && ./start_app.sh
