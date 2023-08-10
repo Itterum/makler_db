@@ -18,5 +18,7 @@ jobs:
         username: ${{ secrets.USER_NAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        script: cd /root/makler_db && git pull origin main && ./start_app.sh
+        script: |
+          whoami
+#          cd /root/makler_db && git pull origin main && ./start_app.sh
         
