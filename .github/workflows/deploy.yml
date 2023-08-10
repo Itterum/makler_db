@@ -21,4 +21,5 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         # Добавьте следующую строку
-        known_hosts: ''
+        known_hosts: |
+          |1|Ts3ghJC5v7Yh2AGufB0Utd4xawk=|5MivUO9OSTTev9WOPRNX2YS0w8E= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
