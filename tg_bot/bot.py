@@ -2,6 +2,7 @@ import logging
 import json
 import aiocron
 import os
+from datetime import datetime
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from pymongo import MongoClient
@@ -41,7 +42,18 @@ async def parse_cars(message: types.Message):
         scraped_data_list = []
 
         for el in scraped_data:
-            scraped_data_list.append(json.loads(str(el).replace('ObjectId(', '').replace(')', '').replace('\'', '\"')))
+            el_dict = el.copy()
+
+            # Преобразование ObjectId в строку
+            el_dict['_id'] = str(el_dict['_id'])
+
+            # Преобразование datetime в строку
+            for key, value in el_dict.items():
+                if isinstance(value, datetime):
+                    # Форматирование даты и времени
+                    el_dict[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+
+            scraped_data_list.append(el_dict)
 
         if len(scraped_data_list) != 0:
             # Создание временного JSON файла
