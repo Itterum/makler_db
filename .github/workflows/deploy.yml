@@ -22,5 +22,4 @@ jobs:
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        # Добавьте следующую строку
-        known_hosts: ''
+        
