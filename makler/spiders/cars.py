@@ -73,7 +73,8 @@ class MaklerMdSpider(scrapy.Spider):
                     'url': response.urljoin(url),
                     'price_text': price_text.strip(),
                     'price_num': price_num,
-                    'currency': currency
+                    'currency': currency,
+                    "createdAt": datetime.utcnow()
                 }
                 cars.append(car_data)
 
@@ -90,6 +91,9 @@ class MaklerMdSpider(scrapy.Spider):
         # Создаем имя коллекции на основе текущей даты
         collection_name = f'cars_{current_datetime}'
         cars_collection = db[collection_name]
+
+        # Создаем индекс с TTL для поля "createdAt"
+        cars_collection.create_index("createdAt", expireAfterSeconds=172800)  # 2 дня в секундах
 
         # Вставляем данные в созданную коллекцию
         cars_collection.insert_many(self.all_cars)
