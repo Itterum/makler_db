@@ -1,0 +1,19 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main  # Здесь указывается ветка, при пуше в которую будет запускаться процесс
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Определение операционной системы
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Клонирование репозитория
+
+    - name: Deploy
+      run: |
+        ssh user@80.249.146.241 "cd /root/makler_db && git pull origin main && ./start_app.sh"  # Ваш скрипт деплоя
+

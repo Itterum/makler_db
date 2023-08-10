@@ -1,12 +1,13 @@
 import logging
 import json
 import aiocron
+import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from pymongo import MongoClient
 
 # Установите токен вашего бота
-BOT_TOKEN = ''
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 logging.basicConfig(level=logging.INFO)
 
