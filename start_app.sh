@@ -1,5 +1,5 @@
 #!/bin/bash
-export BOT_TOKEN=$(cat env_file.txt)
+export BOT_TOKEN=$(cat ../env_file.txt)
 
 docker-compose down
 
