@@ -20,5 +20,5 @@ jobs:
         port: 22
         script: |
           whoami
-          cd /root && git pull git@github.com:Itterum/makler_db.git && cd makler_db && ./start_app.sh
+          cd /root && git clone git@github.com:Itterum/makler_db.git && cd makler_db && ./start_app.sh
         
