@@ -18,5 +18,5 @@ jobs:
         username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        script: cd /root/makler_db && git pull origin main && ./start_app.sh
+        script: cd /root/makler_db && git pull git@github.com:Itterum/makler_db.git && ./start_app.sh
         
