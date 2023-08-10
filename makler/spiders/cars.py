@@ -17,6 +17,10 @@ class MaklerMdSpider(scrapy.Spider):
 
     visited_pagination = False
 
+    def __init__(self, *args, **kwargs):
+        super(MaklerMdSpider, self).__init__(*args, **kwargs)
+        self.all_cars = []  # Сбрасываем переменную перед каждым запуском
+
     def parse(self, response, **kwargs):
         for car in self.parse_page(response):
             self.all_cars.append(car)  # Добавляем данные в общий список
