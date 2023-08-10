@@ -4,9 +4,8 @@ services:
     build:
       context: .
       dockerfile: ./tg_bot/Dockerfile
-    environment:
-      BOT_TOKEN: ${BOT_TOKEN}
-    command: bash -c 'echo $BOT_TOKEN'
+    env_file:
+      - ../env_file.txt
     restart: always
 
   parser:
