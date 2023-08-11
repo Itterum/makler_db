@@ -95,7 +95,7 @@ async def compare_collections(message: types.Message):
         # Проходимся по документам и сравниваем их
         differences = []
         for doc1, doc2 in zip(docs1, docs2):
-            if doc1['price_num'] != doc2['price_num']:
+            if doc1['url'] == doc2['url'] and doc1['price_num'] != doc2['price_num']:
                 differences.append(
                     f"{doc1['title']}: {doc1['price_text']} -> {doc2['price_text']}\nСсылка: {doc1['url']}")
 
