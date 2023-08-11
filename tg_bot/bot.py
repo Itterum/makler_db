@@ -94,10 +94,21 @@ async def compare_collections(message: types.Message):
 
         # Проходимся по документам и сравниваем их
         differences = []
+        news = []
+
         for doc1, doc2 in zip(docs1, docs2):
             if doc1['url'] == doc2['url'] and doc1['price_num'] != doc2['price_num']:
                 differences.append(
                     f"{doc1['title']}: {doc1['price_text']} -> {doc2['price_text']}\nСсылка: {doc1['url']}")
+
+        for doc2 in docs2:
+            found = False
+            for doc1 in docs1:
+                if doc1['url'] == doc2['url']:
+                    found = True
+                    break
+            if not found:
+                news.append(f"Новое объявление: {doc2['url']}")
 
         if differences:
             my_message = f'Различия в ценах:\n'
@@ -108,13 +119,20 @@ async def compare_collections(message: types.Message):
         else:
             await message.reply(f'Нет различий в ценах.')
 
+        if news:
+            for new in news:
+                logging.info(new)
+                await message.reply(new)
+        else:
+            logging.info(f'Нет новых объявлений.')
+
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
 
 
 @dp.message_handler(commands=['compare'])
 async def start_comparison_schedule(message: types.Message):
-    # Расписание: каждые 10 минут
+    # Расписание: каждые 60 минут
     cron = aiocron.crontab('*/60 * * * *')
     cron(compare_collections_wrapper(message))
 
