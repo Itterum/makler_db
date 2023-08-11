@@ -93,7 +93,7 @@ class MaklerMdSpider(scrapy.Spider):
         cars_collection = db[collection_name]
 
         # Создаем индекс с TTL для поля "createdAt"
-        cars_collection.create_index("createdAt", expireAfterSeconds=172800)  # 2 дня в секундах
+        # cars_collection.create_index("createdAt", expireAfterSeconds=432000)  # 2 дня в секундах
 
         # Вставляем данные в созданную коллекцию
         cars_collection.insert_many(self.all_cars)
