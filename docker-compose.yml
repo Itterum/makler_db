@@ -4,16 +4,12 @@ services:
     build:
       context: .
       dockerfile: ./tg_bot/Dockerfile
-    env_file:
-      - ./.env
     restart: always
 
   parser:
     build:
       context: .
       dockerfile: ./makler/Dockerfile
-    env_file:
-      - ./.env
     restart: always
 
   mongodb:
@@ -31,8 +27,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-defaul_value}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-defaul_value}
       sslTunnelUsername: NONE
-    env_file:
-      - ./.env
 
 volumes:
   mongodb_data:

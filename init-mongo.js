@@ -6,7 +6,7 @@ var dbName = process.env.MONGO_DB_NAME || "mydb";
 // Создание базы данных
 db = db.getSiblingDB(dbName);
 
-// Создание пользователя в базе данных admin
+// Создание пользователя
 db.getSiblingDB("admin").createUser({
   user: process.env.MONGO_INITDB_ROOT_USERNAME,
   pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
