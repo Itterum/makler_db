@@ -12,6 +12,8 @@ services:
     build:
       context: .
       dockerfile: ./makler/Dockerfile
+    env_file:
+      - ../.env
     restart: always
 
   mongodb:
