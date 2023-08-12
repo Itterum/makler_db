@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./tg_bot/Dockerfile
     env_file:
-      - ../.env
+      - ./.env
     restart: always
 
   parser:
@@ -13,7 +13,7 @@ services:
       context: .
       dockerfile: ./makler/Dockerfile
     env_file:
-      - ../.env
+      - ./.env
     restart: always
 
   mongodb:
@@ -23,12 +23,12 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      # MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      # MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       sslTunnelUsername: NONE
     command: mongod --auth
     env_file:
-      - ../.env
+      - ./.env
     restart: always
 
 volumes:

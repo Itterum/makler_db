@@ -13,3 +13,4 @@ venv
 output_data/
 output_data
 env*
+.env
