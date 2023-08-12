@@ -1,5 +1,6 @@
 import scrapy
 import logging
+import os
 from datetime import datetime
 from twisted.internet import reactor
 from scrapy.crawler import CrawlerRunner
@@ -7,6 +8,10 @@ from twisted.internet import reactor
 from twisted.internet import task
 from pymongo import MongoClient
 
+MONGO_USERNAME = os.environ.get("MONGO_INITDB_ROOT_USERNAME")
+MONGO_PASSWORD = os.environ.get("MONGO_INITDB_ROOT_PASSWORD")
+
+logging.basicConfig(level=logging.INFO)
 
 class MaklerMdSpider(scrapy.Spider):
     name = "makler_md"
@@ -85,7 +90,7 @@ class MaklerMdSpider(scrapy.Spider):
         current_datetime = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
         # Используем MongoClient для подключения к MongoDB
-        client = MongoClient('mongodb://mongodb:27017/')
+        client = MongoClient(f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
         db = client['cars_db']  # Выбираем базу данных
 
         # Создаем имя коллекции на основе текущей даты

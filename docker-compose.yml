@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./tg_bot/Dockerfile
     env_file:
-      - ../env_file.txt
+      - ../.env
     restart: always
 
   parser:
@@ -20,6 +20,13 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      sslTunnelUsername: NONE
+    command: mongod --auth
+    env_file:
+      - ../.env
     restart: always
 
 volumes:

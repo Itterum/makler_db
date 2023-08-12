@@ -9,6 +9,8 @@ from pymongo import MongoClient
 
 # Установите токен вашего бота
 BOT_TOKEN = os.environ.get("TOKEN")
+MONGO_USERNAME = os.environ.get("MONGO_INITDB_ROOT_USERNAME")
+MONGO_PASSWORD = os.environ.get("MONGO_INITDB_ROOT_PASSWORD")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +31,7 @@ async def start(message: types.Message):
 async def parse_cars(message: types.Message):
     try:
         # Подключение к базе данных MongoDB
-        client = MongoClient('mongodb://mongodb:27017/')
+        client = MongoClient(f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
         db = client['cars_db']  # Выбор базы данных
         collections = db.list_collection_names()
 
@@ -64,6 +66,7 @@ async def parse_cars(message: types.Message):
 
             # Отправка ссылки на скачивание файла
             await bot.send_document(message.chat.id, types.InputFile(json_filename), caption='JSON файл с данными за последний сбор')
+            logging.info('Сообщение отправлено успешно.')
         else:
             await message.reply('База данных пуста.')
     except Exception as e:
@@ -75,7 +78,7 @@ async def parse_cars(message: types.Message):
 async def compare_collections(message: types.Message):
     try:
         # Подключение к базе данных MongoDB
-        client = MongoClient('mongodb://mongodb:27017/')
+        client = MongoClient(f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
         db = client['cars_db']  # Выбор базы данных
         collections = db.list_collection_names()
 
@@ -125,7 +128,7 @@ async def compare_collections(message: types.Message):
                 await message.reply(new)
         else:
             logging.info(f'Нет новых объявлений.')
-
+        
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
 
