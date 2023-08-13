@@ -168,7 +168,7 @@ async def start_comparison_schedule(message: types.Message):
     user_data = await load_user_data(user_id)
 
     if user_data:
-        await compare_collections(message, user_data)
+        await compare_collections(message)
         cron = aiocron.crontab('*/60 * * * *')
         cron(compare_collections_wrapper(message))
         logging.info('Пользователь есть и запущено расписание.')
