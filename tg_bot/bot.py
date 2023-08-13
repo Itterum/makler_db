@@ -26,6 +26,8 @@ last_collection_time = None
 
 
 # Функция для сохранения данных пользователя
+
+
 async def save_user_data(user_id, data):
     client = MongoClient(
         f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
@@ -97,9 +99,6 @@ async def parse_cars(message: types.Message):
             # Отправка ссылки на скачивание файла
             await bot.send_document(message.chat.id, types.InputFile(json_filename), caption='JSON файл с данными за последний сбор')
             logging.info('Сообщение отправлено успешно.')
-            # Сохраняем данные пользователя после сбора данных
-            user_id = message.from_user.id
-            await save_user_data(user_id, scraped_data_list)
         else:
             await message.reply('База данных пуста.')
     except Exception as e:
@@ -107,7 +106,6 @@ async def parse_cars(message: types.Message):
 
 
 # Метод для сравнения двух коллекций и вывода отличий
-
 async def compare_collections(message: types.Message, user_data):
     try:
         # Подключение к базе данных MongoDB
@@ -162,31 +160,28 @@ async def compare_collections(message: types.Message, user_data):
                 await message.reply(new)
         else:
             logging.info(f'Нет новых объявлений.')
-        # Сохраняем данные пользователя после сравнения
-        user_id = message.from_user.id
-        await save_user_data(user_id, user_data)
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
 
 
 @dp.message_handler(commands=['compare'])
 async def start_comparison_schedule(message: types.Message):
-    # Расписание: каждые 60 минут
     user_id = message.from_user.id
     user_data = await load_user_data(user_id)
 
     if user_data:
-        cron = aiocron.crontab('*/60 * * * *')
-        cron(compare_collections_wrapper(message, user_data))
-    else:
-        await message.reply('Для выполнения сравнения вам нужно сначала выполнить команду /parse.')
-
-    
-
-
-def compare_collections_wrapper(message, user_data):
-    async def compare_collections_task():
         await compare_collections(message, user_data)
+    else:
+        # Сохраняем данные пользователя при выполнении команды /compare
+        await save_user_data(user_id, user_data)
+
+    cron = aiocron.crontab('*/60 * * * *')
+    cron(compare_collections_wrapper(message))
+
+
+def compare_collections_wrapper(message):
+    async def compare_collections_task():
+        await compare_collections(message)
 
     return compare_collections_task
 
