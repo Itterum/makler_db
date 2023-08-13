@@ -176,7 +176,7 @@ async def start_comparison_schedule(message: types.Message):
         await save_user_data(user_id, user_data)
 
     cron = aiocron.crontab('*/60 * * * *')
-    cron(compare_collections_wrapper(message))
+    cron(compare_collections_wrapper(message, user_data))
 
 
 def compare_collections_wrapper(message):
