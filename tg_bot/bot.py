@@ -26,8 +26,6 @@ last_collection_time = None
 
 
 # Функция для сохранения данных пользователя
-
-
 async def save_user_data(user_id, data):
     client = MongoClient(
         f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
@@ -106,7 +104,7 @@ async def parse_cars(message: types.Message):
 
 
 # Метод для сравнения двух коллекций и вывода отличий
-async def compare_collections(message: types.Message, user_data):
+async def compare_collections(message: types.Message):
     try:
         # Подключение к базе данных MongoDB
         client = MongoClient(
@@ -171,12 +169,15 @@ async def start_comparison_schedule(message: types.Message):
 
     if user_data:
         await compare_collections(message, user_data)
+        cron = aiocron.crontab('*/60 * * * *')
+        cron(compare_collections_wrapper(message))
+        logging.info('Пользователь есть и запущено расписание.')
     else:
         # Сохраняем данные пользователя при выполнении команды /compare
         await save_user_data(user_id, user_data)
-
-    cron = aiocron.crontab('*/60 * * * *')
-    cron(compare_collections_wrapper(message, user_data))
+        cron = aiocron.crontab('*/60 * * * *')
+        cron(compare_collections_wrapper(message))
+        logging.info('Пользователь сохранен и запущено расписание.')
 
 
 def compare_collections_wrapper(message):
