@@ -25,6 +25,32 @@ dp.middleware.setup(LoggingMiddleware())
 last_collection_time = None
 
 
+# Функция для сохранения данных пользователя
+async def save_user_data(user_id, data):
+    client = MongoClient(
+        f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
+    db = client['users_db']  # Создаем отдельную базу данных для пользователей
+    users_collection = db['users']  # Создаем коллекцию для пользователей
+
+    user_data = {'user_id': user_id, 'data': data}
+    users_collection.update_one({'user_id': user_id}, {
+                                '$set': user_data}, upsert=True)
+
+
+# Функция для загрузки данных пользователя
+async def load_user_data(user_id):
+    client = MongoClient(
+        f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
+    db = client['users_db']
+    users_collection = db['users']
+
+    user_data = users_collection.find_one({'user_id': user_id})
+    if user_data:
+        return user_data['data']
+    else:
+        return None
+
+
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.reply("Привет! Я бот для парсинга объявлений.")
@@ -34,7 +60,8 @@ async def start(message: types.Message):
 async def parse_cars(message: types.Message):
     try:
         # Подключение к базе данных MongoDB
-        client = MongoClient(f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
+        client = MongoClient(
+            f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
         db = client['cars_db']  # Выбор базы данных
         collections = db.list_collection_names()
 
@@ -70,6 +97,9 @@ async def parse_cars(message: types.Message):
             # Отправка ссылки на скачивание файла
             await bot.send_document(message.chat.id, types.InputFile(json_filename), caption='JSON файл с данными за последний сбор')
             logging.info('Сообщение отправлено успешно.')
+            # Сохраняем данные пользователя после сбора данных
+            user_id = message.from_user.id
+            await save_user_data(user_id, scraped_data_list)
         else:
             await message.reply('База данных пуста.')
     except Exception as e:
@@ -78,10 +108,11 @@ async def parse_cars(message: types.Message):
 
 # Метод для сравнения двух коллекций и вывода отличий
 
-async def compare_collections(message: types.Message):
+async def compare_collections(message: types.Message, user_data):
     try:
         # Подключение к базе данных MongoDB
-        client = MongoClient(f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
+        client = MongoClient(
+            f'mongodb://{MONGO_USERNAME}:{MONGO_PASSWORD}@mongodb:27017/')
         db = client['cars_db']  # Выбор базы данных
         collections = db.list_collection_names()
 
@@ -131,7 +162,9 @@ async def compare_collections(message: types.Message):
                 await message.reply(new)
         else:
             logging.info(f'Нет новых объявлений.')
-        
+        # Сохраняем данные пользователя после сравнения
+        user_id = message.from_user.id
+        await save_user_data(user_id, user_data)
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
 
@@ -139,13 +172,21 @@ async def compare_collections(message: types.Message):
 @dp.message_handler(commands=['compare'])
 async def start_comparison_schedule(message: types.Message):
     # Расписание: каждые 60 минут
-    cron = aiocron.crontab('*/60 * * * *')
-    cron(compare_collections_wrapper(message))
+    user_id = message.from_user.id
+    user_data = await load_user_data(user_id)
+
+    if user_data:
+        cron = aiocron.crontab('*/60 * * * *')
+        cron(compare_collections_wrapper(message, user_data))
+    else:
+        await message.reply('Для выполнения сравнения вам нужно сначала выполнить команду /parse.')
+
+    
 
 
-def compare_collections_wrapper(message):
+def compare_collections_wrapper(message, user_data):
     async def compare_collections_task():
-        await compare_collections(message)
+        await compare_collections(message, user_data)
 
     return compare_collections_task
 

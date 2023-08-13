@@ -17,6 +17,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
+      - mongodb_data:/data/db
       - ./mongodb.conf:/etc/mongo/mongodb.conf
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ./.env:/docker-entrypoint-initdb.d/.env
@@ -26,3 +27,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-defaul_value}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-defaul_value}
       sslTunnelUsername: NONE
+
+volumes:
+  mongodb_data:
