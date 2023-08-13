@@ -2,10 +2,13 @@ import logging
 import json
 import aiocron
 import os
+from dotenv import load_dotenv
 from datetime import datetime
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from pymongo import MongoClient
+
+load_dotenv()
 
 # Установите токен вашего бота
 BOT_TOKEN = os.environ.get("TOKEN")

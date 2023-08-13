@@ -19,5 +19,5 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          source ~/.bashrc && cd /root/makler_db && git pull origin main && docker-compose down && docker-compose up --build -d
+          cd /root/makler_db && git pull origin main && docker-compose down && docker-compose up --build -d
         

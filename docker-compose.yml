@@ -27,6 +27,3 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-defaul_value}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-defaul_value}
       sslTunnelUsername: NONE
-
-volumes:
-  mongodb_data:
