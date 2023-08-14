@@ -162,6 +162,9 @@ async def compare_collections(message: types.Message):
                 time.sleep(15)  # Подождать 9 секунд
         else:
             logging.info(f'Нет новых объявлений.')
+
+        differences = []
+        news = []
     except Exception as e:
         await message.reply(f'Произошла ошибка при обращении к базе данных: {e}')
 
