@@ -1,7 +1,7 @@
 import scrapy
 import logging
 import os
-import aiocron
+import datetime
 from dotenv import load_dotenv
 from datetime import datetime
 from twisted.internet import reactor
@@ -120,7 +120,7 @@ def run_crawl():
 # Функция для проверки времени и запуска run_crawl()
 def check_and_run():
     now = datetime.datetime.now()
-    if now.minute == 0 and now.second == 0:  # Запуск в начале каждого часа
+    if now.minute == 30 and now.second == 0:  # Запуск в начале каждого часа
         run_crawl()
 
 
