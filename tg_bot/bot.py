@@ -2,6 +2,7 @@ import logging
 import json
 import aiocron
 import os
+import time
 from dotenv import load_dotenv
 from datetime import datetime
 from aiogram import Bot, Dispatcher, types
@@ -149,6 +150,7 @@ async def compare_collections(message: types.Message):
                 my_message += diff + '\n'
                 logging.info(my_message)
                 await message.reply(diff)
+                time.sleep(15)  # Подождать 15 секунд
         else:
             await message.reply(f'Нет различий в ценах.')
 
@@ -156,6 +158,7 @@ async def compare_collections(message: types.Message):
             for new in news:
                 logging.info(new)
                 await message.reply(new)
+                time.sleep(15)  # Подождать 9 секунд
         else:
             logging.info(f'Нет новых объявлений.')
     except Exception as e:
