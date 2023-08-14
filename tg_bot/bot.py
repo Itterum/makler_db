@@ -24,6 +24,7 @@ dp.middleware.setup(LoggingMiddleware())
 
 # Глобальная переменная для хранения времени последнего сбора данных
 last_collection_time = None
+last_compare_time = {}
 
 
 # Функция для сохранения данных пользователя
@@ -170,17 +171,25 @@ async def start_comparison_schedule(message: types.Message):
     user_id = message.from_user.id
     user_data = await load_user_data(user_id)
 
-    if user_data:
+    current_time = time.time()
+
+    if user_data not in last_compare_time or current_time - last_compare_time[user_id] >= 60 * 60:
         await compare_collections(message)
         cron = aiocron.crontab('*/60 * * * *')
         cron(compare_collections_wrapper(message))
         logging.info('Пользователь есть и запущено расписание.')
+        logging.info('Сравнение завершено для пользователя: %s', user_id)
+
+        # Обновляем временную метку последнего сравнения
+        last_compare_time[user_id] = current_time
     else:
         # Сохраняем данные пользователя при выполнении команды /compare
         await save_user_data(user_id, user_data)
+        await compare_collections(message)
         cron = aiocron.crontab('*/60 * * * *')
         cron(compare_collections_wrapper(message))
         logging.info('Пользователь сохранен и запущено расписание.')
+        await message.reply('Вы уже выполнили сравнение недавно. Повторите попытку позже.')
 
 
 def compare_collections_wrapper(message):
