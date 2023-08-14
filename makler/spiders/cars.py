@@ -118,7 +118,8 @@ def run_crawl():
 
 
 # Запускаем парсинг каждые 30 минут часа
-aiocron.crontab('30 */1 * * *', func=run_crawl)
+cron = aiocron.crontab('30 */1 * * *')
+cron(run_crawl)
 # l = task.LoopingCall(run_crawl)
 # l.start(3600)
 
