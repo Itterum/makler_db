@@ -119,7 +119,7 @@ def run_crawl():
 
 # Функция для проверки времени и запуска run_crawl()
 def check_and_run():
-    now = datetime.datetime.now()
+    now = datetime.now()
     if now.minute == 30 and now.second == 0:  # Запуск в начале каждого часа
         run_crawl()
 
