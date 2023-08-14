@@ -189,7 +189,7 @@ async def start_comparison_schedule(message: types.Message):
         logging.info('Пользователь сохранен и запущено расписание.')
         await message.reply('Вы уже выполнили сравнение недавно. Повторите попытку позже.')
 
-    cron = aiocron.crontab('*/60 * * * *')
+    cron = aiocron.crontab('0 * * * *')
     cron(compare_collections_wrapper(message))
 
 

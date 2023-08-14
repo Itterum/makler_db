@@ -1,6 +1,7 @@
 import scrapy
 import logging
 import os
+import aiocron
 from dotenv import load_dotenv
 from datetime import datetime
 from twisted.internet import reactor
@@ -115,8 +116,8 @@ def run_crawl():
     runner = CrawlerRunner()
     runner.crawl(MaklerMdSpider)
 
-
-l = task.LoopingCall(run_crawl)
-l.start(3600)
+aiocron.crontab('0 * * * *', func=run_crawl)
+# l = task.LoopingCall(run_crawl)
+# l.start(3600)
 
 reactor.run()
