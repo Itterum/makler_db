@@ -117,10 +117,15 @@ def run_crawl():
     runner.crawl(MaklerMdSpider)
 
 
-# Запускаем парсинг каждые 30 минут часа
-# cron = aiocron.crontab('30 */1 * * *')
-# cron(run_crawl)
-l = task.LoopingCall(run_crawl)
-l.start(3600)
+# Функция для проверки времени и запуска run_crawl()
+def check_and_run():
+    now = datetime.datetime.now()
+    if now.minute == 0 and now.second == 0:  # Запуск в начале каждого часа
+        run_crawl()
+
+
+# Создаем объект LoopingCall с интервалом 1 секунда
+l = task.LoopingCall(check_and_run)
+l.start(1)
 
 reactor.run()
