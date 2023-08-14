@@ -22,7 +22,7 @@ class MaklerMdSpider(scrapy.Spider):
     name = "makler_md"
     allowed_domains = ["makler.md"]
     start_urls = [
-        'https://makler.md/ru/ribnita/transport/cars?list&currency_id=5&order=date&direction=desc&list=detail']
+        'https://makler.md/ru/transnistria/transport/cars?list&currency_id=5&order=date&direction=desc&list=detail']
     all_cars = []
 
     visited_pagination = False
